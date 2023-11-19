@@ -11,8 +11,13 @@ public class Main {
         double[] y = {0.0,1.0,-1.0, 1.0};
         SparseVector X = new SparseVector().toSparseVector(x);
         SparseVector Y = new SparseVector().toSparseVector(y);
+        SparseVector Z = new SparseVector(2);
+        Z.setElement(0,1.0);
+        Z.setElement(1,2.0);
         X.add(Y);
         System.out.println(X.getElement(0));
+        //Z.removeElement(0);
+        Z.removeElement(1);
         X.removeElement(3);
         X.setElement(3,4.0);
         X.setElement(0, 0.1);

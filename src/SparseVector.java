@@ -94,6 +94,7 @@ public class SparseVector {
             this.head = curr.next;
             return;
         }
+        //Ignore the IntelliJ error, this does not happen.
         if(curr.next != null){
             prev.setNext(curr.next);
         } else {
