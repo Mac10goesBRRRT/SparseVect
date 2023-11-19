@@ -9,37 +9,17 @@ public class Main {
         //TODO: X ist empty and Y is added on top.
         //TODO: X is empty after a certain index, Y is empty before said index
         //TODO: insert at wrong index
-        double[] x = {1.0,-1.0,1.0};
-        double[] y = {0.0,1.0,-1.0};
+        double[] x = {1.0,-1.0,1.0, 1.0};
+        double[] y = {0.0,1.0,-1.0, 1.0};
         SparseVector X = new SparseVector().toSparseVector(x);
         SparseVector Y = new SparseVector().toSparseVector(y);
-        SparseVector Giant = new SparseVector(big_index+1);
-        Giant.setElement(0,10.0);
-        Giant.setElement(big_index, 10.0);
-        Giant.getElement(big_index);
-        double[] hurr = Giant.toArray();
         X.add(Y);
+        X.removeElement(3);
+        //X.getElement(1);
+        X.setElement(3,4.0);
         X.setElement(0, 0.1);
         //X.setElement(0,0.1);
         System.out.println("Vector X == Y: " + X.equals(Y));
         System.out.println("Vector X + Y: " + Arrays.toString(X.toArray()));
-        /*
-        SparseVector A = new SparseVector().toSparseVector(arr);
-        SparseVector V = new SparseVector(10);
-        System.out.println(V.getLength());
-        V.setElement(1,1.0);
-        V.setElement(2,2.0);
-        V.setElement(3,3.0);
-        A.setElement(1,-4.5);
-        System.out.println(V.getElement(2));
-        V.removeElement(3);
-        System.out.println(V.getElement(3));
-        System.out.println("vector V: "+ Arrays.toString(V.toArray()));
-        System.out.print("vector A: " + Arrays.toString(A.toArray()));
-        //System.out.println(V.getElement(0));
-        //System.out.println(V.getElement(1));
-        //System.out.println(V.getElement(2));
-        //System.out.println(V.getElement(4));
-        */
     }
 }

@@ -19,54 +19,42 @@ public class SparseVector {
      * @throws IndexOutOfBoundsException When the Index is Negative or of a Higher Dimensional Vector
      */
     public void setElement(int index, double value) throws IndexOutOfBoundsException{
-        boolean indexEx = indexExists(index);
+        //Check if Index is in Bounds
+        if(index < 0 || index >= this.getLength())
+            throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
         //Do not set anything if value is 0.0
         if(value == 0.0) {
-            if (!indexEx)
-                return;
-            else {
-                removeElement(index);
-                return;
-            }
+            removeElement(index);
+            return;
         }
-        //Check index
-        if(index >= this.length || index < 0)
-            throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
-        //Does the Element exist?
-        //if the vector exists but does not have an index at 0, start a new vector and append the old
-        if(index == 0 && head != null){
+        //Create new Vector or new head
+        if(index == 0 || head == null){
             Node new_head = new Node(value, index);
             new_head.setNext(head);
             this.head = new_head;
             return;
         }
-        //if the vector is empty, start a new vector
-        if(head == null) {
-            this.head = new Node(value, index);
-        } else if (indexEx) {
-            Node entry = this.head;
-            while(entry.index != index){
-                entry = entry.next;
-            }
-            entry.value = value;
-        } else if (!indexEx){
-            Node entry = this.head;
-            while(entry.next != null && entry.index < index){
-                entry = entry.next;
-            }
-            Node new_node = new Node(value, index);
-            if(entry.next!=null)
-                new_node.setNext(entry.next);
-            entry.setNext(new_node);
+        //Create entry and prev for performance improvements
+        Node entry = this.head;
+        Node prev = null;
+        //Go to the specified Index
+        while(entry != null && entry.index < index){
+            prev = entry;
+            entry = entry.next;
         }
-        else {
-            //Needs to be able to insert
+        //Were at the index already
+        if(entry != null && entry.index == index){
+            entry.value = value;
+        } else {
+            //The index does not exists
             Node new_node = new Node(value, index);
-            Node entry = this.head;
-            while (entry.next != null) {
-                entry = entry.next;
+            if(prev != null){
+                new_node.setNext(entry);
+                prev.setNext(new_node);
+            } else {
+                new_node.setNext(head);
+                this.head = new_node;
             }
-            entry.setNext(new_node);
         }
     }
 
@@ -95,15 +83,24 @@ public class SparseVector {
      * Removes the Element at index
      * @param index to remove. If the Dimension is higher or lower will not throw an error because the behaviour isnt wrong
      */
-    public void removeElement(int index){
-        Node pre = this.head;
-        while(pre.next.index != index){
-            pre = pre.next;
+    public void removeElement(int index) {
+        Node curr = this.head;
+        Node prev = null;
+        if (curr == null)
+            return;
+        while (curr != null && curr.index < index) {
+            prev = curr;
+            curr = curr.next;
         }
-        if(pre.next.next != null)
-            pre.next = pre.next.next;
-        else
-            pre.next = null;
+        if (this.head == curr) {
+            this.head = curr.next;
+            return;
+        }
+        if(curr.next != null){
+            prev.setNext(curr.next);
+        } else {
+            prev.next = null;
+        }
     }
 
     /**
@@ -172,16 +169,6 @@ public class SparseVector {
 
 
     //Useful other stuff
-    private boolean indexExists(int index) {
-        Node to_check = this.head;
-        while(to_check != null){
-            if(index == to_check.index)
-                return true;
-            to_check = to_check.next;
-        }
-        return false;
-    }
-
     /**
      * Converts a SparseVector to an array
      * @return Double[] Array
