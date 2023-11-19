@@ -60,23 +60,21 @@ public class SparseVector {
 
     /**
      *
-     * @param index which Value to get.
+     * @param index which Value to get. Will return 0.0 if the index is within the Vector but no node exists
      * @return Value at current Index
      * @throws IndexOutOfBoundsException When trying to Access a negative or to high Dimension
      */
     public double getElement(int index) throws IndexOutOfBoundsException{
         if(index >= this.length || index < 0){
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
         }
-        if(index == 0){
-            return this.head.value;
-        } else {
-            Node last = this.head.next;
-            while(last.index != index) {
-                last = last.next;
-            }
-            return last.value;
+        Node curr = this.head;
+        while(curr != null && curr.index != index){
+            curr = curr.next;
         }
+        if(curr != null)
+            return curr.value;
+        return 0.0;
     }
 
     /**

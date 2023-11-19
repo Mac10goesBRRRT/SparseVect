@@ -4,8 +4,6 @@ import java.util.Arrays;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        int big_index = 300000000;
-        double[] arr = {1.0,2.0,3.0,0.0,0.2,0.3,9.9};
         //TODO: X ist empty and Y is added on top.
         //TODO: X is empty after a certain index, Y is empty before said index
         //TODO: insert at wrong index
@@ -14,8 +12,8 @@ public class Main {
         SparseVector X = new SparseVector().toSparseVector(x);
         SparseVector Y = new SparseVector().toSparseVector(y);
         X.add(Y);
+        System.out.println(X.getElement(0));
         X.removeElement(3);
-        //X.getElement(1);
         X.setElement(3,4.0);
         X.setElement(0, 0.1);
         //X.setElement(0,0.1);
