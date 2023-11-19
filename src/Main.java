@@ -16,11 +16,12 @@ public class Main {
         SparseVector Giant = new SparseVector(big_index+1);
         Giant.setElement(0,10.0);
         Giant.setElement(big_index, 10.0);
+        Giant.getElement(big_index);
         double[] hurr = Giant.toArray();
         X.add(Y);
-        X.setElement(5, 0.1);
+        X.setElement(0, 0.1);
         //X.setElement(0,0.1);
-        //System.out.println("Vector X == Y: " + X.equals(Y));
+        System.out.println("Vector X == Y: " + X.equals(Y));
         System.out.println("Vector X + Y: " + Arrays.toString(X.toArray()));
         /*
         SparseVector A = new SparseVector().toSparseVector(arr);

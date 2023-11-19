@@ -1,11 +1,23 @@
 public class SparseVector {
     Node head;
-    int length;
+    private int length;
     public SparseVector() {
     }
+
+    /**
+     * Creates a SparseVector
+     * @param length Dimension of the Vector. A Vector can not have more Dimensions added after Creation.
+     */
     public SparseVector(int length){
         this.length = length;
     }
+
+    /**
+     * Sets the Value at the specified Index
+     * @param index Where the value will be set.
+     * @param value The Value to set. Will create a new node if the current Value is 0.
+     * @throws IndexOutOfBoundsException When the Index is Negative or of a Higher Dimensional Vector
+     */
     public void setElement(int index, double value) throws IndexOutOfBoundsException{
         boolean indexEx = indexExists(index);
         //Do not set anything if value is 0.0
@@ -57,6 +69,13 @@ public class SparseVector {
             entry.setNext(new_node);
         }
     }
+
+    /**
+     *
+     * @param index which Value to get.
+     * @return Value at current Index
+     * @throws IndexOutOfBoundsException When trying to Access a negative or to high Dimension
+     */
     public double getElement(int index) throws IndexOutOfBoundsException{
         if(index >= this.length || index < 0){
             throw new IndexOutOfBoundsException();
@@ -71,6 +90,11 @@ public class SparseVector {
             return last.value;
         }
     }
+
+    /**
+     * Removes the Element at index
+     * @param index to remove. If the Dimension is higher or lower will not throw an error because the behaviour isnt wrong
+     */
     public void removeElement(int index){
         Node pre = this.head;
         while(pre.next.index != index){
@@ -81,9 +105,20 @@ public class SparseVector {
         else
             pre.next = null;
     }
+
+    /**
+     * Dimension of the Vector
+     * @return Integer
+     */
     public int getLength(){
         return this.length;
     }
+
+    /**
+     * Compares to SparseVectors
+     * @param other the other SparseVector to compare with
+     * @return Boolean
+     */
     public boolean equals(SparseVector other){
         if(this.getLength() != other.getLength())
             return false;
@@ -99,6 +134,12 @@ public class SparseVector {
         }
         return true;
     }
+
+    /**
+     * Adds to SparseVectors together
+     * @param other SparseVector that is to be added
+     * @throws ArithmeticException if Vectors are of different Dimensions
+     */
     public void add(SparseVector other) throws ArithmeticException {
         if(this.getLength() != other.getLength())
             throw new ArithmeticException("Can not add Vectors of different lengths");
@@ -140,6 +181,11 @@ public class SparseVector {
         }
         return false;
     }
+
+    /**
+     * Converts a SparseVector to an array
+     * @return Double[] Array
+     */
     public double[] toArray(){
         double[] array = new double[this.length];
         Node curr = this.head;
@@ -150,6 +196,11 @@ public class SparseVector {
         return array;
     }
 
+    /**
+     * Takes an Array and converts to SparseVector
+     * @param array Double Array to convert
+     * @return SparseVector representation of array
+     */
     public SparseVector toSparseVector(double[] array){
         SparseVector a = new SparseVector(array.length);
         for(int i = 0; i < array.length; i++){
@@ -160,8 +211,8 @@ public class SparseVector {
 }
 
 class Node {
-    double value = 0.0;
-    int index = 0;
+    double value;
+    int index;
     Node next;
     public Node(double value, int index) {
         this.index = index;
