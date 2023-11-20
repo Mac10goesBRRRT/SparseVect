@@ -27,8 +27,13 @@ public class SparseVector {
             removeElement(index);
             return;
         }
-        //Create new Vector or new head
-        if(index == 0 || head == null){
+        //Create new Vector
+        if(head == null) {
+            this.head = new Node(value, index);
+            return;
+        }
+        //Create new head
+        if(index == 0 && head.index != 0){
             Node new_head = new Node(value, index);
             new_head.setNext(head);
             this.head = new_head;
@@ -62,7 +67,7 @@ public class SparseVector {
      *
      * @param index which Value to get. Will return 0.0 if the index is within the Vector but no node exists
      * @return Value at current Index
-     * @throws IndexOutOfBoundsException When trying to Access a negative or to high Dimension
+     * @throws IndexOutOfBoundsException When trying to Access a negative or higher Dimension
      */
     public double getElement(int index) throws IndexOutOfBoundsException{
         if(index >= this.length || index < 0){
@@ -79,9 +84,13 @@ public class SparseVector {
 
     /**
      * Removes the Element at index
-     * @param index to remove. If the Dimension is higher or lower will not throw an error because the behaviour isnt wrong
+     * @param index to remove. If the Element is already 0.0 at the specified index, removing it is not wrong, so no error is thrown
+     * @throws IndexOutOfBoundsException When trying to Access a negative or higher Dimension
      */
-    public void removeElement(int index) {
+    public void removeElement(int index) throws IndexOutOfBoundsException {
+        if(index >= this.length || index < 0){
+            throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
+        }
         Node curr = this.head;
         Node prev = null;
         if (curr == null)
@@ -138,7 +147,7 @@ public class SparseVector {
      */
     public void add(SparseVector other) throws ArithmeticException {
         if(this.getLength() != other.getLength())
-            throw new ArithmeticException("Can not add Vectors of different lengths");
+            throw new ArithmeticException("Can not add Vectors of length " + this.getLength() + " and " + other.getLength());
         Node me = head;
         Node not_me = other.head;
         if(me == null){
