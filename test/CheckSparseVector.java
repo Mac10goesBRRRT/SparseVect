@@ -158,4 +158,13 @@ class SparseVectorTest {
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @org.junit.jupiter.api.Test
+    void NegativeVectorSize(){
+        Exception exception = Assertions.assertThrows(NegativeArraySizeException.class, () -> new SparseVector(-1), "Unexpected Exception Thrown");
+        String expectedMessage = "Vector cant have negative Dimensions";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
 }

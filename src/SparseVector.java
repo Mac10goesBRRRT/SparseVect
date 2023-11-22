@@ -2,13 +2,16 @@ public class SparseVector {
     Node head;
     private int length;
     public SparseVector() {
+        this.length = 0;
     }
 
     /**
      * Creates a SparseVector
      * @param length Dimension of the Vector. A Vector can not have more Dimensions added after Creation.
      */
-    public SparseVector(int length){
+    public SparseVector(int length) throws NegativeArraySizeException{
+        if(length < 0)
+            throw new NegativeArraySizeException("Vector cant have negative Dimensions");
         this.length = length;
     }
 
