@@ -1,6 +1,17 @@
+/**
+ * SparseVector implements a so called Sparse Vector. This type of Vector is a lot more space efficient
+ * than a normal Vector in certain cases because only non-zero values are saved. For example a 300 Million - Dimensional
+ * Vector with 2 non-zero Values is about 2.4GB, while the same SparseVector is about 88B.
+ * To Transfer between Vector and SparseVector use the {@link #toArray()} and {@link #toSparseVector(double[])} methods.
+ *
+ * Use {@link #setElement(int, double)} to set Values, {@link #getElement(int)} to get values and {@link #removeElement(int)} to remove Values.
+ * for comparing use {@link #equals(SparseVector)} and for adding {@link #add(SparseVector)}
+ */
 public class SparseVector {
     Node head;
     private int length;
+
+    // 0-Dimensional Vector does not make sense, however the Standard constructor does exactly that.
     public SparseVector() {
         this.length = 0;
     }
@@ -27,15 +38,16 @@ public class SparseVector {
             throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
         //Do not set anything if value is 0.0
         if(value == 0.0) {
+            //Removing non-existing nodes is not a problem, so we'll just remove 0 values in all cases
             removeElement(index);
             return;
         }
-        //Create new Vector
+        //Create new Vector, if none exists
         if(head == null) {
             this.head = new Node(value, index);
             return;
         }
-        //Create new head
+        //Create new head, if an Element before the first Element needs to be added.
         if(index == 0 && head.index != 0){
             Node new_head = new Node(value, index);
             new_head.setNext(head);
@@ -54,7 +66,7 @@ public class SparseVector {
         if(entry != null && entry.index == index){
             entry.value = value;
         } else {
-            //The index does not exists
+            //The index does not exist
             Node new_node = new Node(value, index);
             if(prev != null){
                 new_node.setNext(entry);
@@ -77,11 +89,14 @@ public class SparseVector {
             throw new IndexOutOfBoundsException("Index of " + index + " is out of Bounds for length " + this.getLength());
         }
         Node curr = this.head;
+        //run until the index is hit
         while(curr != null && curr.index != index){
             curr = curr.next;
         }
+        //if there is something, return it
         if(curr != null)
             return curr.value;
+        //if there is nothing, the Value is 0.0, since there was no node created.
         return 0.0;
     }
 
@@ -97,17 +112,21 @@ public class SparseVector {
         Node curr = this.head;
         Node prev = null;
         if (curr == null)
+            //if there is nothing to remove, we just go back
             return;
         while (curr != null && curr.index < index) {
+            //run until the index is hit
             prev = curr;
             curr = curr.next;
         }
         if (this.head == curr) {
+            //if we are still at the head, we need to remove the head and keep the rest
             this.head = curr.next;
             return;
         }
         //Ignore the IntelliJ error, this does not happen.
         if(curr.next != null){
+            //if there is something behind the Element to be removed, we want to keep the reference
             prev.setNext(curr.next);
         } else {
             prev.next = null;
@@ -116,10 +135,12 @@ public class SparseVector {
 
     /**
      * Dimension of the Vector
-     * @return Integer
+     * @return Integer of the Dimension
      */
     public int getLength(){
+        //returns the Dimension (heres where the returning happens)
         return this.length;
+        //Here is where Java will Pop the top of the Stack and Return to the Previous Element
     }
 
     /**
@@ -132,9 +153,11 @@ public class SparseVector {
             return false;
         Node me = head;
         Node not_me = other.head;
+        //if Either is null while the other isnt, no need to check further because they wont be equal
         if(me != null ^ not_me != null) //(me != null && not_me == null) || (me == null && not_me != null)
             return false;
         while(me != null){
+            //Run the Vectors, if either Value or Index are different, the Vectors are different
             if(me.value != not_me.value || me.index != not_me.index)
                 return false;
             me = me.next;
@@ -154,23 +177,35 @@ public class SparseVector {
         Node me = head;
         Node not_me = other.head;
         if(me == null){
-            this.head = other.head;
+            //if this Vector is 0, just copy the other Vector
+            //Copying is needed as else both would have the same Reference
+            while(not_me != null){
+                this.setElement(not_me.index, not_me.value);
+                not_me = not_me.next;
+            }
             return;
         }
         if(not_me == null)
+            //The other Vector is 0 and therefore nothing needs to be added
             return;
         while(me != null && not_me != null){
             if(me.index == not_me.index) {
+                //If indices are equal we can just add
+                //Values adding up to 0.0 are checked in the setElement method.
                 this.setElement(me.index, me.value + not_me.value);
                 me = me.next;
                 not_me = not_me.next;
             } else if (me.index > not_me.index){
+                //if me.index is larger than the other all elements between must be added.
                 this.setElement(not_me.index, not_me.value);
                 not_me = not_me.next;
             } else {
+                //if me is at the end, we need new Nodes till the end of the Other Vector is reached
                 if(me.next == null) {
-                    me.setNext(not_me);
-                    break;
+                    Node extra = new Node(not_me.value, not_me.index);
+                    me.setNext(extra);
+                    not_me = not_me.next;
+                    //break;
                 }
                 me = me.next;
             }
@@ -187,6 +222,7 @@ public class SparseVector {
     public double[] toArray(){
         double[] array = new double[this.length];
         Node curr = this.head;
+        //Iterate all Elements
         while(curr != null){
             array[curr.index]=curr.value;
             curr = curr.next;
@@ -201,6 +237,8 @@ public class SparseVector {
      */
     public SparseVector toSparseVector(double[] array){
         SparseVector a = new SparseVector(array.length);
+        //Run the whole Array, Values of 0 can be read but will not be set because they are checked in the
+        //setElement method
         for(int i = 0; i < array.length; i++){
             a.setElement(i, array[i]);
         }
@@ -208,6 +246,7 @@ public class SparseVector {
     }
 }
 
+//Helper Class for the Nodes. Similar to a Linked List with the addition of an Index
 class Node {
     double value;
     int index;
