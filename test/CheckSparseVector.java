@@ -4,6 +4,25 @@ import java.util.Arrays;
 
 class CheckSparseVector {
 
+    //Setting different lengths
+    @org.junit.jupiter.api.Test
+    void setGetLengths() {
+        SparseVector length0 = new SparseVector();
+        SparseVector length5 = new SparseVector(5);
+        int length0Result = length0.getLength();
+        int length5Result = length5.getLength();
+        Assertions.assertEquals(0, length0Result, "length should be 0, is: " + length0Result);
+        Assertions.assertEquals(5, length5Result, "length should be 5, is: " + length5Result);
+    }
+
+    //Getting Values from an all 0 Vector
+    @org.junit.jupiter.api.Test
+    void getFromAllZeroVector() {
+        SparseVector AllZero = new SparseVector(5);
+        double Result = AllZero.getElement(2);
+        Assertions.assertEquals(0.0, Result, "Expected value: 0.0, is " + Result);
+    }
+
     //Checking if Values can be set/get
     @org.junit.jupiter.api.Test
     void setAndGetElement() {
@@ -11,6 +30,15 @@ class CheckSparseVector {
         newV.setElement(0,1.0);
         Double nodeValue = newV.getElement(0);
         Assertions.assertEquals(1.0, nodeValue, "Set/Get Difference, expected: 1.0, actual: " + nodeValue);
+    }
+
+    @org.junit.jupiter.api.Test
+    void setElement0() {
+        SparseVector OneToZeroVect = new SparseVector(2);
+        OneToZeroVect.setElement(0, 1.0);
+        OneToZeroVect.setElement(0, 0.0);
+        double Result = OneToZeroVect.getElement(0);
+        Assertions.assertEquals(0.0, Result, "Setting to 0.0, expected 0.0, is: " + Result);
     }
 
     //Adding in different Orders should still produce the same 2 Vectors
